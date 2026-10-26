@@ -1,50 +1,52 @@
-{
-  sources ? import ./npins,
-  pkgs ? import sources.nixpkgs { },
-}:
+# Home Manager module running the spesa Telegram bot as a user service.
+# The bot's /config edits are saved in ~/.local/state/spesa/config.txt.
+{ config, lib, ... }:
 let
-  inherit (pkgs) lib;
-  src = lib.fileset.toSource {
-    root = ./.;
-    fileset = lib.fileset.unions [ ./project.scala ./src ./resources ];
-  };
-  env = ''
-    export HOME=$TMPDIR COURSIER_CACHE=$TMPDIR/coursier
-  '';
-  package = "scala-cli --power package . --native --server=false -o spesa";
-  nativeBuildInputs = [ pkgs.scala-cli pkgs.clang pkgs.which ];
-  buildInputs = [ pkgs.tesseract pkgs.leptonica pkgs.s2n-tls ];
-  # Fixed-output derivation: fetches compiler + native toolchain into a coursier cache.
-  deps = pkgs.stdenv.mkDerivation {
-    name = "spesa-deps";
-    inherit src nativeBuildInputs buildInputs;
-    buildPhase = ''
-      ${env}
-      ${package}
-    '';
-    # drop non-deterministic coursier bookkeeping files
-    installPhase = ''
-      find $COURSIER_CACHE \( -name '*.lock' -o -name '.*.checked' -o -name '*.lastCheck' \) -delete
-      cp -r $COURSIER_CACHE $out
-    '';
-    outputHashMode = "recursive";
-    outputHash = lib.fakeHash;
-  };
+  cfg = config.services.spesa;
 in
-pkgs.stdenv.mkDerivation {
-  pname = "spesa";
-  version = "0.1.0";
-  inherit src buildInputs;
-  nativeBuildInputs = nativeBuildInputs ++ [ pkgs.makeWrapper ];
-  buildPhase = ''
-    ${env}
-    cp -r ${deps} $COURSIER_CACHE && chmod -R u+w $COURSIER_CACHE
-    ${package} --offline
-  '';
-  installPhase = ''
-    install -Dm755 spesa $out/bin/spesa
-    wrapProgram $out/bin/spesa --set-default TESSDATA_PREFIX ${pkgs.tesseract}/share/tessdata
-  '';
-  passthru = { inherit deps; };
-  meta.mainProgram = "spesa";
+{
+  options.services.spesa = {
+    enable = lib.mkEnableOption "the spesa Telegram bot";
+
+    pkgs = lib.mkOption {
+      type = lib.types.raw;
+      default = import (import ./npins).nixpkgs { };
+      defaultText = lib.literalMD "spesa's own pinned nixpkgs";
+      description = ''
+        The nixpkgs instance spesa is built with. A different one can change what scala-cli downloads,
+        and with it the dependencies hash in package.nix.
+      '';
+    };
+
+    tokenFile = lib.mkOption {
+      # a string, not a path: a path literal would copy the token into the world-readable Nix store
+      type = lib.types.str;
+      example = "/run/secrets/spesa-telegram-token";
+      description = "File containing the Telegram bot token, e.g. a sops secret.";
+    };
+
+    users = lib.mkOption {
+      type = lib.types.nonEmptyListOf lib.types.int;
+      example = [ 524811522 ];
+      description = "Telegram user ids the bot answers; everyone else is ignored.";
+    };
+  };
+
+  config = lib.mkIf cfg.enable {
+    systemd.user.services.spesa = {
+      Unit.Description = "spesa Telegram bot";
+      Service = {
+        ExecStart = lib.getExe (import ./package.nix { inherit (cfg) pkgs; });
+        Environment = [
+          "TELEGRAM_TOKEN_FILE=${cfg.tokenFile}"
+          "SPESA_USERS=${lib.concatMapStringsSep "," toString cfg.users}"
+        ];
+        StateDirectory = "spesa";
+        # also covers the network not being up yet at login
+        Restart = "always";
+        RestartSec = 10;
+      };
+      Install.WantedBy = [ "default.target" ];
+    };
+  };
 }

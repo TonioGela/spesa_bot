@@ -1,9 +1,3 @@
-# The whole configuration: a [Section] line, then one item per line, written as in the list.
-# [Sempre] lists items added to every list; they still need to be in a section to be sorted.
-# The last section, [Correzioni], is "wrong -> right" word fixes, applied before sorting into sections.
-# Sections are in the order you walk the supermarket; [Cristina] is what she buys at the market, sent as its own message.
-# Items match only as a whole: "salsa pomodoro" here does not match "salsa di pomodoro".
-# Every word in these items is a known word, used to fix misspellings and to drop lines that are not part of the list.
 [Cristina]
 basilico
 broccoli
@@ -98,19 +92,9 @@ detergente pavimento
 detergente vetri
 guanti monouso
 
-# Items from the screenshots with alternatives or notes, to place yourself:
-# basilico secco o fresco
-# bistecche o pesce vedete voi
-# ceci o fagioli
-# dadi per il brodo o brodo pronto
-# gamberi surgelati come volete
-# pasta sfoglia o fogli di lasagna quelli che preferite
-# pesce carne o pollo
-# pesce persico o merluzzo quello che volete
-# speck o pancetta
-
 [Sempre]
-# items added to every list, e.g. uova
+Pancakes
+Latte Intero
 
 [Correzioni]
 cedano -> sedano

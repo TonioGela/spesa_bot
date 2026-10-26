@@ -26,14 +26,16 @@ object Main extends IOApp:
         val r = Spesa.fromOcr(t, config)
         IO.println(s"=== $f\n${show(Spesa.sort(r.items, config))}" + r.ignored.map("\n  [ignored] " + _).mkString)
       })
-      else EmberClientBuilder.default[IO].withTimeout(60.seconds).build.use(c => Ref.of[IO, Config](config).flatMap(bot(c, _)))
+      else
+        // the token is read from a file when TELEGRAM_TOKEN_FILE is set, so it stays out of the environment and the Nix store
+        val token = sys.env.get("TELEGRAM_TOKEN_FILE").fold(IO(sys.env("TELEGRAM_TOKEN")))(f => Files[IO].readUtf8(Path(f)).compile.string.map(_.trim))
+        (token, Ref.of[IO, Config](config)).flatMapN((t, ref) => EmberClientBuilder.default[IO].withTimeout(60.seconds).build.use(bot(_, ref, t)))
     }.as(ExitCode.Success)
 
   def show(groups: List[(String, List[String])]): String =
     groups.map((name, items) => (name.toUpperCase :: items).mkString("\n")).mkString("\n\n")
 
-  def bot(client: Client[IO], config: Ref[IO, Config]): IO[Unit] =
-    val token = sys.env("TELEGRAM_TOKEN")
+  def bot(client: Client[IO], config: Ref[IO, Config], token: String): IO[Unit] =
     // only these Telegram user ids are answered; anyone can find and message a bot
     val users = sys.env("SPESA_USERS").split(",").map(_.trim.toLong).toSet
 
