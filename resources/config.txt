@@ -26,6 +26,7 @@ prosciutto cotto
 speck
 
 [Frigo]
+succo d'arancia
 burro
 formaggio
 formaggio grattugiato
@@ -100,6 +101,7 @@ pancakes
 [Sempre]
 pancakes
 latte
+succo d'arancia
 
 [Correzioni]
 cedano -> sedano
