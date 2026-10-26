@@ -1,5 +1,31 @@
-# Supermarket sections in walking order: a [Section] line, then one item per line, written as in the list.
+# The whole configuration: a [Section] line, then one item per line, written as in the list.
+# [Sempre] lists items added to every list; they still need to be in a section to be sorted.
+# The last section, [Correzioni], is "wrong -> right" word fixes, applied before sorting into sections.
+# Sections are in the order you walk the supermarket; [Cristina] is what she buys at the market, sent as its own message.
 # Items match only as a whole: "salsa pomodoro" here does not match "salsa di pomodoro".
+# Every word in these items is a known word, used to fix misspellings and to drop lines that are not part of the list.
+[Cristina]
+basilico
+broccoli
+carote
+cavolo
+cipolla
+fagiolini
+funghi
+insalata
+limone
+melanzane
+patate
+peperoni
+pomodorini
+pomodoro
+prezzemolo
+rosmarino
+sedano
+spinaci
+zucca
+zucchine
+
 [Carne]
 bistecche
 carne trita
@@ -82,3 +108,19 @@ guanti monouso
 # pesce carne o pollo
 # pesce persico o merluzzo quello che volete
 # speck o pancetta
+
+[Sempre]
+# items added to every list, e.g. uova
+
+[Correzioni]
+cedano -> sedano
+cucing -> cucina
+latina -> lattina
+pancettq -> pancetta
+panchetto -> pancetta
+pasata -> passata
+polvera -> polvere
+presemulo -> prezzemolo
+ricottaq -> ricotta
+sfogliq -> sfoglia
+soiq -> soia
