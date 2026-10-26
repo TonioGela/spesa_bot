@@ -1,0 +1,84 @@
+# Supermarket sections in walking order: a [Section] line, then one item per line, written as in the list.
+# Items match only as a whole: "salsa pomodoro" here does not match "salsa di pomodoro".
+[Carne]
+bistecche
+carne trita
+fettine di vitello
+petto di pollo
+pollo
+
+[Pesce]
+frutti di mare
+gamberi surgelati
+merluzzo
+pesce
+pesce persico
+
+[Salumi]
+pancetta
+prosciutto cotto
+speck
+
+[Frigo]
+burro
+formaggio
+formaggio grattugiato
+formaggio spalmabile
+grana
+mozzarella
+mozzarella grattugiata
+panna
+parmigiano
+pasta sfoglia
+ricotta
+robiola
+scamorza
+uova
+
+[Pasta]
+cous cous
+fogli di lasagna
+pasta
+riso
+riso ribe
+risoni
+semola di mais
+
+[Conserve]
+besciamella
+ceci
+dadi per il brodo
+brodo pronto
+fagioli
+lenticchie
+passata di pomodoro
+pasta di pomodoro
+pesto
+salsa pomodoro
+tonno in lattina
+
+[Condimenti]
+aglio in polvere
+basilico secco
+pan grattato
+paprica
+sale
+salsa di soia
+vino bianco di cucina
+zenzero in polvere
+
+[Casa]
+detergente pavimento
+detergente vetri
+guanti monouso
+
+# Items from the screenshots with alternatives or notes, to place yourself:
+# basilico secco o fresco
+# bistecche o pesce vedete voi
+# ceci o fagioli
+# dadi per il brodo o brodo pronto
+# gamberi surgelati come volete
+# pasta sfoglia o fogli di lasagna quelli che preferite
+# pesce carne o pollo
+# pesce persico o merluzzo quello che volete
+# speck o pancetta
