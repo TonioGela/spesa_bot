@@ -18,6 +18,11 @@ class SpesaTest extends munit.FunSuite:
     assertEquals(Spesa.parseConfig("# r\n[Cristina]\nZucca\n\n[Forno]\npane  nero\n[Correzioni]\nPanne -> pane\n"),
       Right(Spesa.Config(List(Spesa.Section("Cristina", List("zucca")), Spesa.Section("Forno", List("pane nero"))), Map("panne" -> "pane"))))
 
+  test("a list corrected by hand is trusted: only [Correzioni] apply, no guesses, leftover marks dropped"):
+    val noAlways = c.copy(always = Nil)
+    assertEquals(Spesa.list("verdure? miste?, cedano, ricottaa, Verdure Miste", noAlways), List("verdure miste", "sedano", "ricottaa"))
+    assertEquals(Spesa.sort(Spesa.list("verdure miste", noAlways), noAlways), List(Spesa.Missing -> List("verdure miste")))
+
   test("[Sempre] items are added to every list once, and are not a section"):
     val sempre = Spesa.parseConfig("[Frigo]\nuova\nburro\n[Sempre]\nUova\n").fold(sys.error, identity)
     assertEquals(sempre.sections.map(_.name), List("Frigo"))
@@ -90,8 +95,9 @@ class SpesaTest extends munit.FunSuite:
         Spesa.Missing -> List("salsa di pomodoro")))
 
   test("sections come in file order, items alphabetical inside them, empty sections omitted"):
-    assertEquals(Spesa.sort(List("uova", "pesce", "burro", "zucchine", "carne trita"), c).map(_._1), List("Cristina", "Carne", "Pesce", "Frigo"))
-    assertEquals(Spesa.sort(List("uova", "burro"), c), List("Frigo" -> List("burro", "uova")))
+    val shop = Spesa.parseConfig("[Cristina]\nzucchine\n[Carne]\ncarne trita\n[Pesce]\npesce\n[Frigo]\nuova\nburro").fold(sys.error, identity)
+    assertEquals(Spesa.sort(List("uova", "pesce", "burro", "zucchine", "carne trita"), shop).map(_._1), List("Cristina", "Carne", "Pesce", "Frigo"))
+    assertEquals(Spesa.sort(List("uova", "burro"), shop), List("Frigo" -> List("burro", "uova")))
 
   // the whole pipeline on real screenshots
 

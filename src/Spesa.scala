@@ -1,5 +1,6 @@
 import cats.syntax.all.*
 import scala.io.Source
+import scala.util.matching.Regex
 
 /** Grocery-list cleanup: drops non-list lines, rejoins split words, fixes spelling, sorts items into sections. */
 object Spesa:
@@ -70,14 +71,18 @@ object Spesa:
 
   def normalize(item: String): String = item.trim.toLowerCase.replaceAll("\\s+", " ")
 
+  private def split(text: String): List[String] = text.split("[,\n]").toList.map(normalize).filter(_.nonEmpty)
+
   /** Comma or newline separated list -> corrected, deduplicated items. Unknown words of 3+ letters get a trailing "?". */
   def items(text: String, config: Config): List[String] =
-    text.split("[,\n]").toList.map(normalize).filter(_.nonEmpty)
-      .map(item => Word.replaceAllIn(item, m => fix(m.matched, config).getOrElse(if m.matched.length < 3 then m.matched else m.matched + "?")))
-      .distinct
+    split(text).map(item => Word.replaceAllIn(item, m => Regex.quoteReplacement(
+      fix(m.matched, config).getOrElse(if m.matched.length < 3 then m.matched else m.matched + "?")))).distinct
 
-  /** A corrected list plus the items always added, deduplicated. */
-  def list(text: String, config: Config): List[String] = (items(text, config) ++ config.always).distinct
+  /** A list corrected by hand plus the items always added, deduplicated. The text is trusted: only [Correzioni] apply,
+   *  with no guessing, and leftover "?" marks are dropped. */
+  def list(text: String, config: Config): List[String] =
+    (split(text.replace("?", "")).map(item => Word.replaceAllIn(item, m => Regex.quoteReplacement(config.fixes.getOrElse(m.matched, m.matched))))
+      ++ config.always).distinct
 
   /** The configured correction, else the word itself if known, else the closest known word within a length-dependent distance. */
   def fix(word: String, config: Config): Option[String] =
