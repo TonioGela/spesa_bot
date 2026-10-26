@@ -32,6 +32,8 @@ in
           "SPESA_USERS=${lib.concatMapStringsSep "," toString cfg.users}"
         ];
         StateDirectory = "spesa";
+        # SIGTERM from systemd ends the process with 143, which is a clean stop, not a failure
+        SuccessExitStatus = 143;
         # also covers the network not being up yet at login
         Restart = "always";
         RestartSec = 10;
