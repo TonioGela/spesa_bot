@@ -8,16 +8,6 @@ in
   options.services.spesa = {
     enable = lib.mkEnableOption "the spesa Telegram bot";
 
-    pkgs = lib.mkOption {
-      type = lib.types.raw;
-      default = import (import ./npins).nixpkgs { };
-      defaultText = lib.literalMD "spesa's own pinned nixpkgs";
-      description = ''
-        The nixpkgs instance spesa is built with. A different one can change what scala-cli downloads,
-        and with it the dependencies hash in package.nix.
-      '';
-    };
-
     tokenFile = lib.mkOption {
       # a string, not a path: a path literal would copy the token into the world-readable Nix store
       type = lib.types.str;
@@ -36,7 +26,7 @@ in
     systemd.user.services.spesa = {
       Unit.Description = "spesa Telegram bot";
       Service = {
-        ExecStart = lib.getExe (import ./package.nix { inherit (cfg) pkgs; });
+        ExecStart = lib.getExe (import ./package.nix { }); # built with spesa's own pinned nixpkgs
         Environment = [
           "TELEGRAM_TOKEN_FILE=${cfg.tokenFile}"
           "SPESA_USERS=${lib.concatMapStringsSep "," toString cfg.users}"

@@ -20,20 +20,6 @@ spinaci
 zucca
 zucchine
 
-[Carne]
-bistecche
-carne trita
-fettine di vitello
-petto di pollo
-pollo
-
-[Pesce]
-frutti di mare
-gamberi surgelati
-merluzzo
-pesce
-pesce persico
-
 [Salumi]
 pancetta
 prosciutto cotto
@@ -54,6 +40,21 @@ ricotta
 robiola
 scamorza
 uova
+latte
+
+[Carne]
+bistecche
+carne trita
+fettine di vitello
+petto di pollo
+pollo
+
+[Pesce]
+frutti di mare
+gamberi surgelati
+merluzzo
+pesce
+pesce persico
 
 [Pasta]
 cous cous
@@ -84,7 +85,7 @@ pan grattato
 paprica
 sale
 salsa di soia
-vino bianco di cucina
+vino bianco
 zenzero in polvere
 
 [Casa]
@@ -92,9 +93,12 @@ detergente pavimento
 detergente vetri
 guanti monouso
 
+[Dolci]
+pancakes
+
 [Sempre]
-Pancakes
-Latte Intero
+pancakes
+latte
 
 [Correzioni]
 cedano -> sedano
