@@ -76,7 +76,8 @@ passata di pomodoro
 pasta di pomodoro
 pesto
 salsa pomodoro
-tonno in lattina
+tonno
+dado
 
 [Condimenti]
 aglio in polvere
