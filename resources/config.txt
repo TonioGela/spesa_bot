@@ -20,6 +20,11 @@ spinaci
 zucca
 zucchine
 
+[Verdure]
+basilico
+prezzemolo
+alloro
+
 [Salumi]
 pancetta
 prosciutto cotto
@@ -31,12 +36,14 @@ burro
 formaggio
 formaggio grattugiato
 formaggio spalmabile
+provolone
 grana
 mozzarella
 mozzarella grattugiata
 panna
 parmigiano
 pasta sfoglia
+pasta per la lasagna
 ricotta
 robiola
 scamorza
