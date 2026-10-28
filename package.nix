@@ -1,19 +1,28 @@
-{
-  sources ? import ./npins,
-  pkgs ? import sources.nixpkgs { },
-}:
 let
-  inherit (pkgs) lib;
-  src = lib.fileset.toSource {
+  pins = import ./npins;
+  pkgs = import pins.nixpkgs { };
+  src = pkgs.lib.fileset.toSource {
     root = ./.;
-    fileset = lib.fileset.unions [ ./project.scala ./src ./resources ];
+    fileset = pkgs.lib.fileset.unions [
+      ./project.scala
+      ./src
+      ./resources
+    ];
   };
   env = ''
     export HOME=$TMPDIR COURSIER_CACHE=$TMPDIR/coursier
   '';
   package = "scala-cli --power package . --native --server=false -o spesa";
-  nativeBuildInputs = [ pkgs.scala-cli pkgs.clang pkgs.which ];
-  buildInputs = [ pkgs.tesseract pkgs.leptonica pkgs.s2n-tls ];
+  nativeBuildInputs = [
+    pkgs.scala-cli
+    pkgs.clang
+    pkgs.which
+  ];
+  buildInputs = [
+    pkgs.tesseract
+    pkgs.leptonica
+    pkgs.s2n-tls
+  ];
   # Fixed-output derivation: fetches compiler + native toolchain into a coursier cache.
   deps = pkgs.stdenv.mkDerivation {
     name = "spesa-deps";
