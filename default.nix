@@ -26,7 +26,7 @@ in
     systemd.user.services.spesa = {
       Unit.Description = "spesa Telegram bot";
       Service = {
-        ExecStart = lib.getExe (import ./package.nix { }); # built with spesa's own pinned nixpkgs
+        ExecStart = lib.getExe (import ./package.nix); # built with spesa's own pinned nixpkgs
         Environment = [
           "TELEGRAM_TOKEN_FILE=${cfg.tokenFile}"
           "SPESA_USERS=${lib.concatMapStringsSep "," toString cfg.users}"
