@@ -37,7 +37,7 @@ let
       cp -r $COURSIER_CACHE $out
     '';
     outputHashMode = "recursive";
-    outputHash = "sha256-DL4Cd6bsFrCmx808i/jOOUuWtVnDaSqz/IiHexJjaaQ=";
+    outputHash = "sha256-/Xb+SdnbZXyrIiha1SwNo1v0+JW6/OLEY35ncU+XMko=";
   };
 in
 pkgs.stdenv.mkDerivation {
