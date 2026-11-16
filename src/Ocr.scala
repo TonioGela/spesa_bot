@@ -34,8 +34,8 @@ private object engine:
     if tess.TessBaseAPIInit3(a, null, c"eng+ita") != 0 then
       tess.TessBaseAPIDelete(a)
       throw IllegalStateException("tesseract init failed for 'eng+ita' (TESSDATA_PREFIX?)")
-    // freed before exit, otherwise tesseract's own cleanup prints leak warnings
-    sys.addShutdownHook(engine.synchronized(tess.TessBaseAPIDelete(a)))
+    // never freed: a shutdown hook taking the engine lock deadlocked the exit when the GC ran out of heap,
+    // leaving the process hung instead of letting systemd restart it; tesseract may print leak warnings on exit
     a
 
 /** A decoded Leptonica image; the GC doesn't move objects, so the array can be passed by pointer. */
